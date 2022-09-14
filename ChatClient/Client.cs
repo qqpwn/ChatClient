@@ -21,9 +21,9 @@ namespace ChatClient
             try
             {
 
-                IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
-                IPAddress ipAddr = ipHost.AddressList[0];
-                IPEndPoint iPEndPoint = new IPEndPoint(ipAddr, 11111);
+                //IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
+                IPAddress ipAddr = IPAddress.Parse("192.168.0.197");
+                IPEndPoint iPEndPoint = new IPEndPoint(ipAddr, 80);
 
                 Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -34,7 +34,7 @@ namespace ChatClient
 
                     Console.WriteLine("Socket conneted to -> {0} ", sender.RemoteEndPoint.ToString());
 
-                    byte[] messageSent = Encoding.ASCII.GetBytes("Test Client");
+                    byte[] messageSent = Encoding.ASCII.GetBytes("Din mor er en luder");
                     int bytesSent = sender.Send(messageSent);
 
                     byte[] messageReceived = new byte[1024];
@@ -42,8 +42,12 @@ namespace ChatClient
                     int bytesRecv = sender.Receive(messageReceived);
                     Console.WriteLine("Message from server -> {0}", Encoding.ASCII.GetString(messageReceived, 0, bytesRecv));
 
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
+                    if (Console.ReadLine() == "q")
+                    {
+                        sender.Shutdown(SocketShutdown.Both);
+                        sender.Close();
+                    }
+                   
 
                 }
                 catch (ArgumentNullException ane)
